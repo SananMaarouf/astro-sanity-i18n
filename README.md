@@ -1,19 +1,36 @@
-# Astro + Sanity-CMS Landing Page Starter
+# Astro + Sanity-CMS + i18n Landing Page Starter
+A template to quickly create a multi-language static website using Astro and Sanity CMS.
 
-Quickly create a modern, content-driven landing page for a small business, artist, or independent contractor—such as a DJ—with this ready-to-use template. Built with Astro, Sanity CMS, React, TailwindCSS. it's designed for fast setup & easy customization.
+## Language support
 
-## Language Support
-This template is configured for multiple language use.  
-If you need only 1 language, check out my other template repository: [astro-sanity](https://github.com/SananMaarouf/astro-sanity).
+It is configured for Norwegian (nb) and English(en), with English as the default language.
+
+If you want to change from Norwegian to another locale, update the following files and folders to use your locale code (for example, "fr" or "es"):
+
+- Rename or create pages: /src/pages/nb -> /src/pages/[your-locale]
+- astro.config.mjs
+- sanity.config.ts
+- /src/pages/index.astro
+- /src/pages/nb/index.astro (or the equivalent folder for your locale)
+- /src/pages/post/[slug].astro
+- /src/pages/nb/post/[slug].astro (or the equivalent folder for your locale)
+
+If you only need a single language, consider using the simpler template: https://github.com/SananMaarouf/astro-sanity
 
 ## Hosting & Adapters
-This template is primarily intended for static site generation.
-If you need on-demand rendering for dynamic pages, refer to the [Astro docs](https://docs.astro.build/en/guides/on-demand-rendering/) for a list of official adapters for different cloud providers.
+If you are only using Astro as a static site builder, you don't need an adapter. But in this template, the Sanity-CMS /studio route is a on-demand rendered route, so we use the Node adapter standalone mode. 
+When you run "npm run build" i will generate the static pages (but not the /studio route) to the dist folder.
+
+If you plan on hosting this on a cloud provider such as Netlify, Vercel or Cloudflare, refer to the [Astro docs](https://docs.astro.build/en/guides/on-demand-rendering/) for a list of adapters to use in:
+- astro.config.mjs
+
+so it builds correctly in their environment.
+
+
 
 
 ## 🏢 Sanity Studio & CLI Setup
-
-This project uses [Sanity CMS](https://www.sanity.io/).  
+ 
 To create an organization, initialize a project, and deploy your Sanity Studio, use the included npm scripts.
 
 ### Common Setup Steps
@@ -22,7 +39,7 @@ To create an organization, initialize a project, and deploy your Sanity Studio, 
    ```bash
    npm run sanity:login
    ```
-2. **Create a new organization (optional):**
+2. **Create a new organization (if you don't have one):**
    ```bash
    npm run sanity:create-org -- --name "<your-org-name>"
    ```
