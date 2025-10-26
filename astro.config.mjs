@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import sanity from '@sanity/astro';
 import react from '@astrojs/react';
+import node from '@astrojs/node';
 import { loadEnv } from 'vite';
 
 // Load .env variables manually
@@ -12,10 +13,22 @@ const dataset = env.PUBLIC_SANITY_DATASET;
 
 // https://astro.build/config
 export default defineConfig({
+  adapter: node({
+    mode: 'standalone'
+  }),
   vite: {
-    plugins: []
+    plugins: [],
+    optimizeDeps: {
+      exclude: ['ViteDevServerStopped']
+    }
   },
-
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en', 'nb'],
+    fallback: {
+      nb: 'en'
+    }
+  },
   integrations: [
     sanity({
       projectId,

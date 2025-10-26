@@ -8,17 +8,30 @@ export type SanityPost = {
     _ref: string;
     _type: 'reference';
   };
-  body: any[]; // Replace 'any' with a more specific type if known
-  categories: any[]; // Replace 'any' with a more specific type if known
+  body: Array<{
+    _key: string;
+    value: any[]; // Array of block content for each language
+  }>;
+  categories: Array<{
+    _ref: string;
+    _type: 'reference';
+    _key: string;
+  }>;
   mainImage: {
     _type: 'image';
     alt: string;
-    asset: any; // Replace 'any' with a more specific type if known
+    asset: {
+      _ref: string;
+      _type: 'reference';
+    };
   };
   publishedAt: string;
   slug: {
     _type: 'slug';
     current: string;
   };
-  title: string;
+  title: Array<{
+    _key: string;
+    value: string;
+  }>;
 };

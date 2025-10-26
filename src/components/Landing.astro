@@ -4,9 +4,15 @@ import type { Landing } from "../../types/landing";
 import SanityImage from "../components/SanityImage.astro";
 import { urlForImage } from "../sanity/lib/url-for-image";
 
+interface Props {
+	lang?: string;
+}
+
+const { lang = 'en' } = Astro.props;
+
 const { data: landing } = await loadQuery<Landing>({
 	query: `*[_type == "Landing"] | order(_createdAt desc)[0]{
-	 title,
+	 "title": title[_key == $lang][0].value,
 	 image{
 		asset,
 		alt
@@ -17,9 +23,10 @@ const { data: landing } = await loadQuery<Landing>({
 			url
 		}
 	 },
-	 ctaText,
-	 ctaBtnText
+	 "ctaText": ctaText[_key == $lang][0].value,
+	 "ctaBtnText": ctaBtnText[_key == $lang][0].value
   }`,
+	params: { lang },
 });
 
 const posterUrl = landing.image?.asset ? urlForImage(landing.image.asset).url() : "";
