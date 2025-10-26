@@ -17,7 +17,9 @@ export type Landing = {
   };
   youtubeUrl?: string;
   video?: {
-    asset?: any;
+    asset?: {
+      url: string;
+    };
   };
   ctaText?: string;
   ctaBtnText?: string;
