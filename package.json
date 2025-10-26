@@ -9,7 +9,7 @@
     "astro": "astro",
     "sanity:login": "sanity login",
     "sanity:create-org": "sanity organizations create",
-    "sanity:init": "sanity init",
+    "sanity:init": "npx sanity@latest init --env",
     "sanity:dev": "sanity dev",
     "sanity:build": "sanity build",
     "sanity:deploy": "sanity deploy",
