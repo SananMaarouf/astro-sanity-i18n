@@ -77,7 +77,7 @@ Run them from your project root using `npm run <script-name>`.
 | `sanity:dataset-import`     | Import a dataset from a file                                    |
 | `sanity:documents-query`    | Query documents in your dataset                                 |
 | `sanity:users-list`         | List users in your project                                      |
-| `sanity:cors-add`           | Add a CORS origin to your project                               |
+| `sanity:cors-add`           | Add a CORS origin to your project    ( this one came in handy if it didn't automatically add it for me)                            |
 | `sanity:cors-list`          | List CORS origins for your project                              |
 | `sanity:hook-create`        | Create a webhook for your project                               |
 
@@ -87,7 +87,6 @@ Run them from your project root using `npm run <script-name>`.
 npm run sanity:login
 npm run sanity:init
 npm run sanity:deploy
-npm run sanity:dataset-list
 ```
 
 Refer to the [Sanity CLI documentation](https://www.sanity.io/docs/cli) for more details on each command.
@@ -96,11 +95,10 @@ Refer to the [Sanity CLI documentation](https://www.sanity.io/docs/cli) for more
 
 - **Astro Framework:** Lightning-fast static and dynamic site generation with a modern developer experience.
 - **Sanity CMS Integration:** Flexible, real-time content management with powerful schema definitions—edit content without redeploying.
-- **Vercel Adapter with ISR:** Deploy to Vercel with built-in [Incremental Static Regeneration](https://vercel.com/docs/incremental-static-regeneration), enabling fast updates and scalable performance.
 - **React Support:** Use React components seamlessly alongside Astro and other frameworks.
 - **TailwindCSS:** Rapidly style your site with utility-first CSS.
 - **PortableText Rendering:** Rich text content from Sanity, rendered beautifully in Astro.
-- **Environment Variable Setup:** Easily swap out your Sanity project credentials for new projects.
+- **Environment Variable Setup:** Easily swap in your Sanity project credentials for new projects.
 - **Ready-to-Extend Structure:** Clean, modular file organization for easy customization and scaling.
 
 ## 🚀 Project Structure
