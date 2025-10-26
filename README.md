@@ -3,8 +3,8 @@
 Quickly create a modern, content-driven landing page for a small business, artist, or independent contractor—such as a DJ—with this ready-to-use template. Built with Astro, Sanity CMS, React, TailwindCSS. it's designed for fast setup & easy customization.
 
 ## Language Support
-This template is configured for single-language use.  
-If you need multilingual support, check out my other template repository: [astro-sanity-i18n](https://github.com/SananMaarouf/astro-sanity-i18n).
+This template is configured for multiple language use.  
+If you need only 1 language, check out my other template repository: [astro-sanity](https://github.com/SananMaarouf/astro-sanity).
 
 ## Hosting & Adapters
 This template is primarily intended for static site generation.
