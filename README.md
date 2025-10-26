@@ -1,5 +1,49 @@
 # Astro + Sanity-CMS + i18n Landing Page Starter
-A template to quickly create a multi-language static website using Astro and Sanity CMS.
+### A template to quickly create a multi-language static website using Astro and Sanity CMS.
+
+### Features
+
+- **Astro Framework:** Lightning-fast static and dynamic site generation with a modern developer experience.
+- **Sanity CMS Integration:** Flexible, real-time content management with powerful schema definitions—edit content without redeploying.
+- **React Support:** Use React components seamlessly alongside Astro and other frameworks.
+- **TailwindCSS:** Rapidly style your site with utility-first CSS.
+
+# Setup
+#### To get started, you need to:
+### 1. Create your own `.env` file in the project root, using `.env.example` as a reference:
+
+   ```bash
+   cp .env.example .env
+   ```
+   > The the content in .env are now placeholders and will be overwritten with the actual project id and dataset later when you run "npm run sanity:init" later
+
+
+### 2. Log in to Sanity use the CLI to initialize a project and deploy your Sanity Studio to the web
+
+
+1. **Login to Sanity:**
+   ```bash
+   npm run sanity:login
+   ```
+2. **Create a new organization (if you don't have one):**
+   ```bash
+   npm run sanity:create-org -- --name "<your-org-name>"
+   ```
+3. **Initialize a new project or select an existing one:**
+   ```bash
+   npm run sanity:init
+   ```
+   Follow the prompts to choose your organization and dataset.
+
+4. **Deploy your Sanity Studio:**
+   ```bash
+   npm run sanity:deploy
+   ```
+   >   This will give you a public Studio URL. You can update documents there after the project is deployed. But when developing locally to the "/studio" route. 
+   >
+   See [Sanity CLI docs](https://www.sanity.io/docs/getting-started-with-sanity-cli) for more info.
+
+
 
 ## Language support
 
@@ -26,165 +70,8 @@ If you plan on hosting this on a cloud provider such as Netlify, Vercel or Cloud
 
 so it builds correctly in their environment.
 
-
-
-
-## 🏢 Sanity Studio & CLI Setup
- 
-To create an organization, initialize a project, and deploy your Sanity Studio, use the included npm scripts.
-
-### Common Setup Steps
-
-1. **Login to Sanity:**
-   ```bash
-   npm run sanity:login
-   ```
-2. **Create a new organization (if you don't have one):**
-   ```bash
-   npm run sanity:create-org -- --name "<your-org-name>"
-   ```
-3. **Initialize a new project or select an existing one:**
-   ```bash
-   npm run sanity:init
-   ```
-   Follow the prompts to choose your organization and dataset.
-
-4. **Deploy your Sanity Studio:**
-   ```bash
-   npm run sanity:deploy
-   ```
-   This will give you a public Studio URL.
-
-> **Note:**  
-> The Sanity Studio code should be in a `/studio` folder or as a separate app.  
-> See [Sanity CLI docs](https://www.sanity.io/docs/getting-started-with-sanity-cli) for more info.
-
-### Available Sanity CLI Scripts
-
-The following npm scripts wrap common [Sanity CLI](https://www.sanity.io/docs/getting-started-with-sanity-cli) commands for convenience.  
-Run them from your project root using `npm run <script-name>`.
-
-| Script                      | Description                                                      |
-|-----------------------------|------------------------------------------------------------------|
-| `sanity:login`              | Log in to your Sanity account                                   |
-| `sanity:create-org`         | Create a new Sanity organization                                |
-| `sanity:init`               | Initialize a new Sanity project or select an existing one        |
-| `sanity:deploy`             | Deploy your Sanity Studio                                       |
-| `sanity:start`              | Start the local Sanity Studio development server                 |
-| `sanity:dataset-create`     | Create a new dataset                                            |
-| `sanity:dataset-list`       | List all datasets in your project                               |
-| `sanity:dataset-export`     | Export a dataset to a file                                      |
-| `sanity:dataset-import`     | Import a dataset from a file                                    |
-| `sanity:documents-query`    | Query documents in your dataset                                 |
-| `sanity:users-list`         | List users in your project                                      |
-| `sanity:cors-add`           | Add a CORS origin to your project    ( this one came in handy if it didn't automatically add it for me)                            |
-| `sanity:cors-list`          | List CORS origins for your project                              |
-| `sanity:hook-create`        | Create a webhook for your project                               |
-
-**Example usage:**
-
-```bash
-npm run sanity:login
-npm run sanity:init
-npm run sanity:deploy
-```
-
-Refer to the [Sanity CLI documentation](https://www.sanity.io/docs/cli) for more details on each command.
-
-## ✨ Features
-
-- **Astro Framework:** Lightning-fast static and dynamic site generation with a modern developer experience.
-- **Sanity CMS Integration:** Flexible, real-time content management with powerful schema definitions—edit content without redeploying.
-- **React Support:** Use React components seamlessly alongside Astro and other frameworks.
-- **TailwindCSS:** Rapidly style your site with utility-first CSS.
-- **PortableText Rendering:** Rich text content from Sanity, rendered beautifully in Astro.
-- **Environment Variable Setup:** Easily swap in your Sanity project credentials for new projects.
-- **Ready-to-Extend Structure:** Clean, modular file organization for easy customization and scaling.
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── assets/
-│   ├── components/
-│   │   ├── Landing.astro
-│   │   ├── InternalLink.astro
-│   │   ├── PortableText.astro
-│   │   └── SanityImage.astro
-│   ├── layouts/
-│   │   └── Layout.astro
-│   ├── pages/
-│   │   ├── index.astro
-│   │   └── post/
-│   │       └── [slug].astro
-│   └── sanity/
-│       ├── lib/
-│       │   ├── load-query.ts
-│       │   └── sanity-client.ts
-│       └── schemaTypes/
-│           ├── author.ts
-│           ├── blockContent.ts
-│           ├── category.ts
-│           ├── footer.ts
-│           ├── index.ts
-│           ├── landing.ts
-│           └── post.ts
-├── types/
-│   ├── index.ts
-│   ├── landing.ts
-│   └── post.ts
-├── .env.example
-├── environment.ts
-├── astro.config.mjs
-├── sanity.config.ts
-├── sanity.cli.ts
-├── tsconfig.json
-├── package-lock.json
-└── package.json
-
-```
-
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## ⚡ Environment Setup
-
-This template uses environment variables for your Sanity project credentials.  
-Your actual `.env` file is **not** included in version control (see `.gitignore`).  
-To get started, **create your own `.env` file** in the project root, using `.env.example` as a reference:
-
-```bash
-cp .env.example .env
-```
-
-Then, fill in your Sanity project ID and dataset in `.env`:
-
-```env
-PUBLIC_SANITY_PROJECT_ID="your sanity project id here"
-PUBLIC_SANITY_DATASET="production"
-```
-
-**Note:**  
-Your `.env` file is required for local development and building your site!
-
-## 🏁 Get Started
-
-This template is designed to be cloned and customized for your own projects.  
-Swap out your Sanity credentials, update your schemas, and start building—no boilerplate required!
+## Troubleshooting
+If you go to "/studio" route and just get a blank page, check the console log in the browser.
+It is likely that the origin is not allowed access to the project. 
+To fix that run:
+`npm run sanity:cors-add`  
