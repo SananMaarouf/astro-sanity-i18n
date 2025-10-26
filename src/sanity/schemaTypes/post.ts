@@ -6,7 +6,7 @@ export const postType = defineType({
   fields: [
     defineField({
       name: "title",
-      type: "string",
+      type: "internationalizedArrayString",
     }),
     defineField({
       name: "slug",
@@ -46,7 +46,7 @@ export const postType = defineType({
     }),
     defineField({
       name: "body",
-      type: "blockContent",
+      type: "internationalizedArrayBlockContent",
     }),
   ],
 
