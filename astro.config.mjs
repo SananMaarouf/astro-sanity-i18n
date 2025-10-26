@@ -15,7 +15,13 @@ export default defineConfig({
   vite: {
     plugins: []
   },
-
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en', 'nb'],
+    fallback: {
+      nb: 'en'
+    }
+  },
   integrations: [
     sanity({
       projectId,
