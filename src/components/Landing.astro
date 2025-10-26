@@ -1,0 +1,62 @@
+---
+import { loadQuery } from "../sanity/lib/load-query";
+import type { Landing } from "../../types/landing";
+import SanityImage from "../components/SanityImage.astro";
+import { urlForImage } from "../sanity/lib/url-for-image";
+
+const { data: landing } = await loadQuery<Landing>({
+	query: `*[_type == "Landing"] | order(_createdAt desc)[0]{
+	 title,
+	 image{
+		asset,
+		alt
+	 },
+	 youtubeUrl,
+	 video{
+		asset->{
+			url
+		}
+	 },
+	 ctaText,
+	 ctaBtnText
+  }`,
+});
+
+const posterUrl = landing.image?.asset ? urlForImage(landing.image.asset).url() : "";
+
+---
+
+<div class="mt-8 max-w-3xl mx-auto text-center">
+	<h1 class="text-4xl font-extrabold mb-4">{landing.title}</h1>
+	{landing.image?.asset && <SanityImage node={landing.image} width={600} />}
+	{
+		landing.youtubeUrl && (
+			<div class="mb-6">
+				<iframe
+					width="560"
+					height="315"
+					src={`https://www.youtube.com/embed/${landing.youtubeUrl}`}
+					title="YouTube video"
+					allowfullscreen
+					class="mx-auto"
+				/>
+			</div>
+		)
+	}
+	{
+		landing.video?.asset && (
+			<video controls width="600" class="mx-auto mb-6" poster={posterUrl} autoplay muted loop>
+				<source src={landing.video.asset.url} type="video/mp4" />
+				Your browser does not support the video tag.
+			</video>
+		)
+	}
+	{landing.ctaText && <p class="mb-4 text-lg">{landing.ctaText}</p>}
+	{
+		landing.ctaBtnText && (
+			<button class="inline-block mb-8 px-6 py-3 bg-blue-600 text-white rounded-lg text-lg font-semibold shadow hover:bg-blue-700 transition">
+				{landing.ctaBtnText}
+			</button>
+		)
+	}
+</div>
