@@ -75,3 +75,8 @@ If you go to "/studio" route and just get a blank page, check the console log in
 It is likely that the origin is not allowed access to the project. 
 To fix that run:
 `npm run sanity:cors-add`  
+
+## Guides used for creating this template repository
+### [Guide to localization in Sanity CMS](https://www.sanity.io/docs/studio/localization)
+
+### [Guide to Internationalization in Astro](https://docs.astro.build/en/guides/internationalization/)
