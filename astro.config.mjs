@@ -4,6 +4,7 @@ import sanity from '@sanity/astro';
 import react from '@astrojs/react';
 import node from '@astrojs/node';
 import { loadEnv } from 'vite';
+import tailwindcss from '@tailwindcss/vite';
 
 // Load .env variables manually
 const env = loadEnv('', process.cwd(), '');
@@ -17,7 +18,7 @@ export default defineConfig({
     mode: 'standalone'
   }),
   vite: {
-    plugins: [],
+    plugins: [tailwindcss()],
     optimizeDeps: {
       exclude: ['ViteDevServerStopped']
     }

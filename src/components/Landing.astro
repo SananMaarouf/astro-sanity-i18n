@@ -1,7 +1,6 @@
 ---
 import { loadQuery } from "../sanity/lib/load-query";
 import type { Landing } from "../../types/landing";
-import SanityImage from "../components/SanityImage.astro";
 import { urlForImage } from "../sanity/lib/url-for-image";
 
 interface Props {
@@ -29,41 +28,50 @@ const { data: landing } = await loadQuery<Landing>({
 	params: { lang },
 });
 
-const posterUrl = landing.image?.asset ? urlForImage(landing.image.asset).url() : "";
-
+const bgUrl = landing.image?.asset ? urlForImage(landing.image.asset).url() : "";
+const posterUrl = bgUrl;
 ---
 
-<div class="mt-8 max-w-3xl mx-auto text-center">
-	<h1 class="text-4xl font-extrabold mb-4">{landing.title}</h1>
-	{landing.image?.asset && <SanityImage node={landing.image} width={600} />}
-	{
-		landing.youtubeUrl && (
-			<div class="mb-6">
+<div 
+	class="relative mt-8 max-w-5xl mx-auto rounded-lg overflow-hidden"
+	style={bgUrl ? `background-image: url('${bgUrl}'); background-size: cover; background-position: center;` : ""}
+>
+	<div class="absolute inset-0 bg-black/40"></div>
+	<section class="relative flex flex-row items-center justify-center z-10" style="min-height: 350px;">
+		<div class="w-1/2 flex flex-col items-start justify-center p-8">
+			<h1 class="text-2xl md:text-3xl lg:text-4xl font-extrabold mb-4 text-white drop-shadow">{landing.title}</h1>
+			{landing.ctaText && <p class="text-lg text-white drop-shadow">{landing.ctaText}</p>}
+		</div>
+		<div class="w-1/2 flex items-center justify-center p-8">
+			{landing.video?.asset && (
+				<video controls width="100%" class="mx-auto mb-6 rounded-lg shadow-lg" poster={posterUrl} autoplay muted loop>
+					<source src={landing.video.asset.url} type="video/mp4" />
+					Your browser does not support the video tag.
+				</video>
+			)}
+		</div>
+	</section>
+	<div class="relative z-10 text-center px-8 pb-8">
+		{landing.youtubeUrl && (
+			<div class="mb-6 flex justify-center">
 				<iframe
 					width="560"
 					height="315"
 					src={`https://www.youtube.com/embed/${landing.youtubeUrl}`}
 					title="YouTube video"
 					allowfullscreen
-					class="mx-auto"
+					class="mx-auto rounded-lg shadow-lg"
 				/>
 			</div>
-		)
-	}
-	{
-		landing.video?.asset && (
-			<video controls width="600" class="mx-auto mb-6" poster={posterUrl} autoplay muted loop>
-				<source src={landing.video.asset.url} type="video/mp4" />
-				Your browser does not support the video tag.
-			</video>
-		)
-	}
-	{landing.ctaText && <p class="mb-4 text-lg">{landing.ctaText}</p>}
-	{
-		landing.ctaBtnText && (
-			<button class="inline-block mb-8 px-6 py-3 bg-blue-600 text-white rounded-lg text-lg font-semibold shadow hover:bg-blue-700 transition">
+		)}
+		{landing.ctaBtnText && (
+			<button class="
+				inline-block mb-8 px-6 py-3 
+				rounded-lg text-lg bg-primary text-primary-foreground font-semibold
+				shadow-lg
+			">
 				{landing.ctaBtnText}
 			</button>
-		)
-	}
+		)}
+	</div>
 </div>
