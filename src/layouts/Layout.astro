@@ -3,10 +3,16 @@ import '../styles/global.css';
 import { Navbar } from '@/components/react/navbar';
 const pageTitle = import.meta.env.PUBLIC_PAGE_TITLE;
 const navbarTitle = import.meta.env.PUBLIC_NAVBAR_TITLE;
+
+interface Props {
+	lang?: string;
+}
+
+const { lang = 'en' } = Astro.props;
 ---
 <!doctype html>
 
-<html lang="en">
+<html lang={lang}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />

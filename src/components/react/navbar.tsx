@@ -22,6 +22,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { ThemeSwitcher, ThemeSwitcherMobile } from "./theme-switcher";
+import { LanguageSwitcher, LanguageSwitcherMobile } from "./language-switcher";
 
 interface MenuItem {
   title: string;
@@ -116,6 +117,7 @@ const Navbar = ({
             </div>
           </div>
           <div className="flex gap-2 items-center">
+            <LanguageSwitcher />
             <ThemeSwitcher />
             <Button asChild size="sm">
               <a href={linkBtn.signup.url}>{linkBtn.signup.title}</a>
@@ -168,6 +170,7 @@ const Navbar = ({
                     <Button asChild>
                       <a href={linkBtn.signup.url}>{linkBtn.signup.title}</a>
                     </Button>
+                    <LanguageSwitcherMobile />
                     <ThemeSwitcherMobile />
                   </div>
                 </div>
