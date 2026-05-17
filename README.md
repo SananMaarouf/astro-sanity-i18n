@@ -16,19 +16,23 @@ git pull
 npm install
 cp .env.example .env   # only if .env is missing
 npm run sanity:codegen
-npm run dev
+npm run sanity:dev   # terminal 1 — Studio at http://localhost:3333
+npm run dev          # terminal 2 — Site at http://localhost:4321
 ```
 
 Then confirm:
 1. Site opens at <http://localhost:4321>
-2. Studio opens at <http://localhost:4321/studio>
-3. Content appears in both `en` and `nb` where translations exist
+2. Content appears in both `en` and `nb` where translations exist
 
-If Studio fails, jump to [Troubleshooting](#troubleshooting).
+For content editing, run Studio in a separate terminal:
+```bash
+npm run sanity:dev
+```
+Studio opens at <http://localhost:3333> (or use the hosted Sanity Studio at manage.sanity.io).
 
 ## What this template includes
 
-- Astro static site output with Sanity Studio mounted at `/studio`
+- Astro static site output (Studio runs separately, not embedded)
 - Locale-aware routing (`en` default, `nb` secondary)
 - Localized Sanity fields via `sanity-plugin-internationalized-array`
 - Centralized, typed GROQ queries in `src/sanity/lib/queries.ts`
@@ -106,24 +110,15 @@ dataset: "production",
 
 If these values do not match `.env`, you may see content/schema mismatches.
 
-### 6) Start Sanity Studio once
-
-```bash
-npm run sanity:dev
-```
-
-This validates your Studio config and schema setup. Stop with `Ctrl-C` after it
-starts.
-
-### 7) Add local CORS origin
+### 6) Add local CORS origin
 
 ```bash
 npm run sanity:cors-add -- http://localhost:4321 --credentials
 ```
 
-This is required for local Astro + Studio communication.
+This is required for the Astro dev server to query Sanity.
 
-### 8) Generate schema/query types
+### 7) Generate schema/query types
 
 ```bash
 npm run sanity:codegen
@@ -133,19 +128,14 @@ Run this any time you change:
 - Sanity schemas
 - Query selections in GROQ files
 
-### 9) Run the app
+### 8) Start Studio and create required content
 
+Start Studio in a second terminal:
 ```bash
-npm run dev
+npm run sanity:dev
 ```
 
-Open:
-- Site: <http://localhost:4321>
-- Embedded Studio: <http://localhost:4321/studio>
-
-## First content you must create
-
-The layout expects singleton content. Create these in Studio first:
+Studio opens at <http://localhost:3333>. The layout expects singleton content — create these before running the Astro dev server:
 
 | Document type | Why it matters | Minimum fields to fill |
 |---|---|---|
@@ -158,6 +148,16 @@ Optional but recommended:
 - `post`, `author`, and `category` to validate list/detail routes
 - `page` to validate CMS-driven `/{locale}/[page]` routes
 
+Publish all documents in Studio, then move on.
+
+### 9) Run the Astro dev server
+
+```bash
+npm run dev
+```
+
+Open <http://localhost:4321> — content should appear in both `en` and `nb` where translations exist.
+
 ## Daily development workflow
 
 When actively building:
@@ -167,9 +167,10 @@ When actively building:
    git pull
    npm install
    ```
-2. Start dev server:
+2. Start both servers (separate terminals):
    ```bash
-   npm run dev
+   npm run sanity:dev   # terminal 1 — Studio at http://localhost:3333
+   npm run dev          # terminal 2 — Astro at http://localhost:4321
    ```
 3. If you changed schema/query types:
    ```bash
@@ -222,7 +223,7 @@ Restart `npm run dev` and add translations in Studio for existing documents.
 
 | Command | Purpose |
 |---|---|
-| `npm run dev` | Run Astro dev server with embedded Studio |
+| `npm run dev` | Run Astro dev server at http://localhost:4321 |
 | `npm run build` | Build static production output to `dist/` |
 | `npm run preview` | Preview production build locally |
 | `npm run sanity:dev` | Run Sanity Studio directly |
@@ -240,17 +241,22 @@ Before production deploy:
    ```bash
    npm run sanity:cors-add -- https://your-site.example --credentials
    ```
-4. Build:
+4. Deploy Sanity Studio (hosted, for browser-based content editing):
+   ```bash
+   npm run sanity:deploy
+   ```
+   After this, use the hosted Studio URL (e.g. `https://your-project.sanity.studio`) for all content changes instead of running `sanity:dev` locally.
+5. Build:
    ```bash
    npm run build
    ```
-5. Deploy `dist/` to your host (or add an Astro adapter for SSR targets)
+6. Deploy `dist/` to your host (or add an Astro adapter for SSR targets)
 
 ## Troubleshooting
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
-| `/studio` is blank or API calls fail | Missing CORS origin | `npm run sanity:cors-add -- http://localhost:4321 --credentials` |
+| Studio at `:3333` fails to load content | Missing CORS origin | `npm run sanity:cors-add -- http://localhost:4321 --credentials` |
 | Studio shows unexpected project content | `sanity.config.ts` projectId/dataset mismatch | Align `sanity.config.ts` with `.env` values |
 | `sanity:codegen` fails or types are stale | Schema extraction/typegen not rerun | `npm run sanity:codegen` |
 | Some content appears in `en` but not `nb` | Missing translation values in localized fields | Add missing locale values in Studio |
