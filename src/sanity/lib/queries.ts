@@ -141,3 +141,17 @@ export const LANDING_QUERY = defineQuery(`
     "ctaBtnText": coalesce(ctaBtnText[language == $locale][0].value, ctaBtnText[0].value)
   }
 `);
+
+// ───── Theme ───────────────────────────────────────────────────────────────
+// Deliberately locale-free: the color palette is language-neutral, so this
+// query takes no `$locale` param and no localized document exists. `light` /
+// `dark` are `themePalette` objects holding one hex string per design token;
+// `src/lib/theme.ts` turns them into CSS variables.
+
+export const THEME_QUERY = defineQuery(`
+  *[_type == "theme"][0]{
+    radius,
+    light,
+    dark
+  }
+`);

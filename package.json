@@ -18,13 +18,13 @@
     "sanity:dataset-export": "sanity dataset export",
     "sanity:dataset-import": "sanity dataset import",
     "sanity:cors-add": "sanity cors add",
-    "sanity:extract": "sanity schema extract --path=schema.json",
+    "sanity:extract": "sanity schema extract --path=schema.json --force",
     "sanity:typegen": "sanity typegen generate",
     "sanity:codegen": "npm run sanity:extract && npm run sanity:typegen"
   },
   "dependencies": {
-    "@astrojs/node": "^11.0.2",
-    "@astrojs/react": "^6.0.1",
+    "@astrojs/node": "^11.1.8",
+    "@astrojs/react": "^7.1.0",
     "@portabletext/types": "^2.0.15",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-dialog": "^1.1.15",
@@ -39,7 +39,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@types/react-is": "^19.2.0",
-    "astro": "^7.0.7",
+    "astro": "^7.4.0",
     "astro-portabletext": "^0.12.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -55,8 +55,8 @@
     "vite": "^8.0.0"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.9",
-    "@sanity/cli": "^7.0.0",
+    "@astrojs/check": "^0.9.10",
+    "@sanity/cli": "^8.0.0",
     "@tailwindcss/typography": "^0.5.19",
     "@types/node": "^25.7.0",
     "concurrently": "^10.0.3",

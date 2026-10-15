@@ -9,6 +9,7 @@ import { navigationType } from "./navigation";
 import { pageType } from "./page";
 import { postType } from "./post";
 import { siteSettingsType } from "./siteSettings";
+import { themePaletteType, themeType } from "./theme";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -21,5 +22,8 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     pageType,
     postType,
     siteSettingsType,
+    themeType,
+    // Object type referenced by `theme.light` / `theme.dark`.
+    themePaletteType,
   ],
 };
