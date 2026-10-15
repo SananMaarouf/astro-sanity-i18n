@@ -5,12 +5,22 @@ import {
   THEME_TOKENS,
   type PaletteValues,
 } from "@/lib/theme-tokens";
+import { fontStack, googleFontsHref } from "@/lib/google-fonts";
+
+/** `theme.fonts` — the two Google Fonts choices (see `src/lib/google-fonts.ts`). */
+export interface ThemeFonts {
+  /** Font for headings; `system` (the default) follows the body font. */
+  heading?: string | null;
+  /** Font for everything else. `system` = the built-in sans stack. */
+  body?: string | null;
+}
 
 /** Shape of the `theme` document as returned by `THEME_QUERY`. */
 export interface ThemeDocument {
   radius?: string | null;
   light?: PaletteValues | null;
   dark?: PaletteValues | null;
+  fonts?: ThemeFonts | null;
 }
 
 /** A single color as stored by @sanity/color-input. */
@@ -90,6 +100,30 @@ function declarations(
 }
 
 /**
+ * Font declarations for the `<style>` payload.
+ *
+ * A `system`/unset choice emits nothing on purpose: `src/styles/global.css`
+ * already defaults `--font-body` to the built-in sans stack and `--font-heading`
+ * to `var(--font-body)`, so "heading follows body" keeps working without the
+ * generator having to know the stacks. Only families that are actually chosen
+ * are emitted, so the document stays readable.
+ *
+ * Unlike the colors, fonts are not per-mode: they go into the light block only.
+ * `html.dark` does not redeclare them, and because both selectors match the same
+ * element the light declaration keeps applying in dark mode.
+ */
+function fontDeclarations(fonts: ThemeFonts | null | undefined): string[] {
+  const lines: string[] = [];
+  const body = fontStack(fonts?.body);
+  const heading = fontStack(fonts?.heading);
+
+  if (body) lines.push(`  --font-body: ${body};`);
+  if (heading) lines.push(`  --font-heading: ${heading};`);
+
+  return lines;
+}
+
+/**
  * Build the `<style>` payload that overrides the palette baked into
  * `src/styles/global.css`.
  *
@@ -107,17 +141,37 @@ export function themeToCss(theme: ThemeDocument | null | undefined): string {
 
   const light = theme.light ?? null;
   const dark = theme.dark ?? null;
-  const hasAnyValue =
+  const fonts = fontDeclarations(theme.fonts);
+  const hasAnyColor =
     Object.values(light ?? {}).some(Boolean) ||
     Object.values(dark ?? {}).some(Boolean);
 
-  if (!hasAnyValue) return "";
+  if (!hasAnyColor && fonts.length === 0) return "";
 
   const radius = radiusToCss(theme.radius) ?? radiusToCss(DEFAULT_RADIUS);
 
+  // Fonts are mode-independent, so they are only appended to the light block.
+  const rootBlock = [
+    "html:root {",
+    declarations(light, DEFAULT_LIGHT_PALETTE, radius),
+    ...fonts,
+    "}",
+  ].join("\n");
+
   return [
-    "/* Generated from the Sanity \"Theme\" document — edit colors in the Studio, not here. */",
-    `html:root {\n${declarations(light, DEFAULT_LIGHT_PALETTE, radius)}\n}`,
+    '/* Generated from the Sanity "Theme" document — edit colors and fonts in the Studio, not here. */',
+    rootBlock,
     `html.dark {\n${declarations(dark, DEFAULT_DARK_PALETTE, radius)}\n}`,
   ].join("\n");
+}
+
+/**
+ * Google Fonts stylesheet URL for the theme's font choices, or `null` when
+ * neither heading nor body uses a webfont (then `Layout.astro` renders no
+ * `<link>` at all and the CSS defaults are the only fonts in play).
+ */
+export function themeFontsHref(
+  theme: ThemeDocument | null | undefined,
+): string | null {
+  return googleFontsHref([theme?.fonts?.heading, theme?.fonts?.body]);
 }

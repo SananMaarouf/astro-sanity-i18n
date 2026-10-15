@@ -8,7 +8,7 @@ import LanguageSwitcherMobile from "@/components/LanguageSwitcherMobile.astro";
 import { loadQuery } from "@/sanity/lib/load-query";
 import { SITE_SETTINGS_QUERY } from "@/sanity/lib/queries";
 import { loadTheme } from "@/sanity/lib/theme-query";
-import { themeToCss } from "@/lib/theme";
+import { themeFontsHref, themeToCss } from "@/lib/theme";
 import { resolveLocale, localizedPath, type Locale } from "@/sanity/lib/locale";
 
 interface Props {
@@ -34,6 +34,11 @@ const [{ data: settings }, { data: theme }] = await Promise.all([
 // CMS color palette -> CSS variables. Empty string when no theme doc exists,
 // in which case the defaults in global.css apply.
 const themeCss = themeToCss(theme);
+
+// Google Fonts stylesheet for the two fonts chosen in the Studio (Theme →
+// Fonts), or null when both are left on "site default" — then no external font
+// request is made at all.
+const fontsHref = themeFontsHref(theme);
 
 const navTitle = settings?.title ?? "Astro × Sanity";
 
@@ -64,6 +69,17 @@ const menu: MenuItem[] = (settings?.primaryNav?.items ?? [])
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
+    <!-- Fonts selected in the Studio (Theme → Fonts). Preconnect first so the
+         font request does not pay for a fresh DNS + TLS handshake. -->
+    {
+      fontsHref && (
+        <>
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+          <link rel="stylesheet" href={fontsHref} />
+        </>
+      )
+    }
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <SEO
