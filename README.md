@@ -37,7 +37,10 @@ Studio opens at <http://localhost:3333> (or use the hosted Sanity Studio at mana
 - Localized Sanity fields via `sanity-plugin-internationalized-array`
 - Centralized, typed GROQ queries in `src/sanity/lib/queries.ts`
 - Prebuilt schemas: `siteSettings`, `navigation`, `footer`, `landing`, `page`,
-  `post`, `category`, `author`, and `blockContent`
+  `post`, `category`, `author`, `theme`, and `blockContent`
+- CMS-driven color palette: clients edit the light/dark theme tokens in the
+  Studio instead of touching `src/styles/global.css` (see
+  [Theme: colors from the CMS](#theme-colors-from-the-cms))
 - Tailwind CSS + shadcn UI setup
 
 ## Prerequisites
@@ -143,6 +146,7 @@ Studio opens at <http://localhost:3333>. The layout expects singleton content �
 | `Navigation` | Main menu rendering | `title`, at least 1 `items[]` row with `label` + (`href` or `internalRef`) |
 | `Footer` | Footer text/contact section | `address` (`en`, `nb`) and/or `copyright` |
 | `Landing` | Homepage hero content | `title` (`en`, `nb`) and `ctaBtnText` (`en`, `nb`) |
+| `Theme` | Site color palette (light + dark) | nothing — every color starts at the template default |
 
 Optional but recommended:
 - `post`, `author`, and `category` to validate list/detail routes
@@ -206,6 +210,69 @@ npm run sanity:codegen
 
 Restart `npm run dev` and add translations in Studio for existing documents.
 
+## Theme: colors from the CMS
+
+The palette lives in Sanity, not in a CSS file. Open **Theme** in the Studio
+(<http://localhost:3333> → Theme), pick colors, publish.
+
+- **Light mode / Dark mode** — 37 design tokens that every Tailwind/shadcn utility
+  reads. Each one has a swatch picker plus a hex field and a starter value, so you
+  only change what you want. The custom input shows a live preview of the palette
+  plus a swatch grid.
+- The 19 everyday tokens (`background`, `foreground`, `primary`, `border`, …) are
+  always visible. The 18 rarely-touched ones (charts, sidebar, gradients,
+  `muted-2`) live in a collapsed **Advanced** group.
+- **Corner radius** — rounding for buttons, cards and inputs.
+- Unset colors fall back to the starter palette, so a half-filled document still
+  renders a complete, working site.
+
+How it flows:
+
+1. `src/sanity/schemaTypes/theme.ts` defines the `theme` document (a `themePalette`
+   object used twice: light + dark).
+2. `THEME_QUERY` in `src/sanity/lib/queries.ts` fetches it — **locale-free**.
+3. `themeToCss()` in `src/lib/theme.ts` turns it into CSS custom properties.
+4. `src/layouts/Layout.astro` inlines those properties into `<head>` of every page.
+
+i18n notes:
+
+- **The palette is language-neutral and is not localized.** There is no `language`
+  field, no `internationalizedArray` wrapping, and a single lang-agnostic singleton
+  id (`theme`). Colors do not translate; a per-locale copy would silently split the
+  palette and make the site depend on which doc the query picked up.
+- `THEME_QUERY` takes **no `$locale` param** (`*[_type == "theme"][0]`), unlike the
+  other queries. Every locale gets the same palette.
+- The palette is fetched once per build, not once per page: `src/sanity/lib/theme-query.ts`
+  memoizes the promise, so with routes × locales pages the extra GROQ round-trip
+  happens only once. The cache is **bypassed under `astro dev`** (`import.meta.env.DEV`):
+  module state lives for the whole dev-server session, so a cached promise would pin
+  the first palette and a color published in the Studio would only appear after
+  restarting the server. In dev the query runs per request, so a browser refresh
+  picks up the change.
+
+Other notes:
+
+- The generated CSS uses `html:root` / `html.dark` selectors on purpose: they beat
+  the `:root` / `.dark` defaults in `global.css` on specificity, which is what makes
+  the CMS values win both in `astro dev` (Vite injects the imported stylesheet at
+  runtime) and in a production build (Astro hoists the stylesheet to the end of
+  `<head>`). Do not replace them with plain `:root` / `.dark`.
+- The starter palette in `src/lib/theme-tokens.ts` is the exact sRGB equivalent of
+  the original `oklch(...)` values, which stay in `global.css` as the fallback used
+  when no `Theme` document exists. Those `muted-2` / `gradient-*` fallbacks were
+  rewritten because the original shadcnblocks values used the invalid
+  `oklch(92.5%, 0%, 89.876%)` form (comma syntax + `%` hue), which browsers reject.
+- Palettes are stored as plain hex strings, not `@sanity/color-input` objects. That
+  plugin writes 18 attributes per color, which pushes a full light+dark palette past
+  Sanity's 1000-attribute-per-document limit (the site only ever reads the hex
+  anyway). Hex strings keep the whole document at ~80 attributes.
+- The site is static (`output: 'static'`) and colors are read at build time, so a
+  published change appears after a rebuild/redeploy. In `astro dev` the next request
+  picks it up.
+- To add a token: add it to `THEME_TOKENS` in `src/lib/theme-tokens.ts` (the Sanity
+  field name is derived), add the matching `--token` to `global.css`, then run
+  `npm run sanity:codegen`.
+
 ## File map (where to edit what)
 
 | Goal | File(s) |
@@ -215,6 +282,11 @@ Restart `npm run dev` and add translations in Studio for existing documents.
 | Change Studio project/language plugin config | `sanity.config.ts` |
 | Add/edit document schemas | `src/sanity/schemaTypes/*` |
 | Change Studio sidebar organization | `src/sanity/structure.ts` |
+| Color tokens + starter palette | `src/lib/theme-tokens.ts` |
+| CMS palette → CSS variables | `src/lib/theme.ts`, `src/layouts/Layout.astro` |
+| Memoized palette fetch | `src/sanity/lib/theme-query.ts` |
+| Studio inputs for the palette | `src/sanity/components/palette-preview.tsx`, `src/sanity/components/color-swatch-input.tsx` |
+| Fallback palette / non-color tokens | `src/styles/global.css` |
 | Add or adjust data fetching | `src/sanity/lib/queries.ts` |
 | Update layouts/components | `src/layouts/*`, `src/components/*` |
 | Update routes/pages | `src/pages/*` |

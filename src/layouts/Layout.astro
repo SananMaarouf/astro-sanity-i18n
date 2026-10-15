@@ -7,6 +7,8 @@ import LanguageSwitcher from "@/components/LanguageSwitcher.astro";
 import LanguageSwitcherMobile from "@/components/LanguageSwitcherMobile.astro";
 import { loadQuery } from "@/sanity/lib/load-query";
 import { SITE_SETTINGS_QUERY } from "@/sanity/lib/queries";
+import { loadTheme } from "@/sanity/lib/theme-query";
+import { themeToCss } from "@/lib/theme";
 import { resolveLocale, localizedPath, type Locale } from "@/sanity/lib/locale";
 
 interface Props {
@@ -21,10 +23,17 @@ interface Props {
 const locale = resolveLocale(Astro.props.locale ?? Astro.currentLocale);
 const { title, description, image, path = "/" } = Astro.props;
 
-const { data: settings } = await loadQuery<any>({
-  query: SITE_SETTINGS_QUERY,
-  params: { locale },
-});
+// The palette is language-neutral and identical for every locale, so its GROQ
+// query is locale-free and memoized across pages (see `theme-query.ts`), while
+// site settings stay per-locale.
+const [{ data: settings }, { data: theme }] = await Promise.all([
+  loadQuery<any>({ query: SITE_SETTINGS_QUERY, params: { locale } }),
+  loadTheme(),
+]);
+
+// CMS color palette -> CSS variables. Empty string when no theme doc exists,
+// in which case the defaults in global.css apply.
+const themeCss = themeToCss(theme);
 
 const navTitle = settings?.title ?? "Astro × Sanity";
 
@@ -64,6 +73,11 @@ const menu: MenuItem[] = (settings?.primaryNav?.items ?? [])
       image={image}
       path={path}
     />
+    {
+      themeCss && (
+        <style is:inline set:html={themeCss} />
+      )
+    }
     <script is:inline>
       const theme =
         localStorage.getItem("theme") ||
