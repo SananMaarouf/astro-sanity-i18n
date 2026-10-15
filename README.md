@@ -244,7 +244,11 @@ i18n notes:
   other queries. Every locale gets the same palette.
 - The palette is fetched once per build, not once per page: `src/sanity/lib/theme-query.ts`
   memoizes the promise, so with routes × locales pages the extra GROQ round-trip
-  happens only once.
+  happens only once. The cache is **bypassed under `astro dev`** (`import.meta.env.DEV`):
+  module state lives for the whole dev-server session, so a cached promise would pin
+  the first palette and a color published in the Studio would only appear after
+  restarting the server. In dev the query runs per request, so a browser refresh
+  picks up the change.
 
 Other notes:
 
