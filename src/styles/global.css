@@ -11,7 +11,9 @@
 :root {
   --background: oklch(0.9818 0.0054 95.0986);
   --foreground: oklch(0.3438 0.0269 95.7226);
-  --card: oklch(0.9818 0.0054 95.0986);
+  /* Elevated card surface (pure white). Was identical to --background, so cards
+     could never separate from the page. */
+  --card: oklch(1.0000 0 0);
   --card-foreground: oklch(0.1908 0.0020 106.5859);
   --popover: oklch(1.0000 0 0);
   --popover-foreground: oklch(0.2671 0.0196 98.9390);
@@ -101,7 +103,9 @@
 .dark {
   --background: oklch(0.2679 0.0036 106.6427);
   --foreground: oklch(0.8074 0.0142 93.0137);
-  --card: oklch(0.2679 0.0036 106.6427);
+  /* Elevated card surface (warm charcoal, matches --popover). Was identical to
+     --background, so cards could never separate from the page. */
+  --card: oklch(0.3085 0.0035 106.6039);
   --card-foreground: oklch(0.9818 0.0054 95.0986);
   --popover: oklch(0.3085 0.0035 106.6039);
   --popover-foreground: oklch(0.9211 0.0040 106.4781);

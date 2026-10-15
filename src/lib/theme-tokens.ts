@@ -233,7 +233,7 @@ export const RADIUS_OPTIONS = [
 export const DEFAULT_LIGHT_PALETTE: PaletteValues = {
   background: "#faf9f5", // oklch(0.9818 0.0054 95.0986)
   foreground: "#3d3929", // oklch(0.3438 0.0269 95.7226)
-  card: "#faf9f5", // oklch(0.9818 0.0054 95.0986)
+  card: "#ffffff", // elevated card surface — pure white on the warm ivory page. Was oklch(0.9818 0.0054 95.0986), i.e. byte-identical to --background, so cards could not separate from the page.
   "card-foreground": "#141413", // oklch(0.1908 0.0020 106.5859)
   popover: "#ffffff", // oklch(1.0000 0 0)
   "popover-foreground": "#28261b", // oklch(0.2671 0.0196 98.9390)
@@ -275,7 +275,7 @@ export const DEFAULT_LIGHT_PALETTE: PaletteValues = {
 export const DEFAULT_DARK_PALETTE: PaletteValues = {
   background: "#262624", // oklch(0.2679 0.0036 106.6427)
   foreground: "#c3c0b6", // oklch(0.8074 0.0142 93.0137)
-  card: "#262624", // oklch(0.2679 0.0036 106.6427)
+  card: "#30302e", // elevated card surface — warm charcoal one step above the page. Was oklch(0.2679 0.0036 106.6427), i.e. byte-identical to --background; matches the popover surface.
   "card-foreground": "#faf9f5", // oklch(0.9818 0.0054 95.0986)
   popover: "#30302e", // oklch(0.3085 0.0035 106.6039)
   "popover-foreground": "#e5e5e2", // oklch(0.9211 0.0040 106.4781)
