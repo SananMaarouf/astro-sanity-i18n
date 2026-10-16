@@ -1,6 +1,3 @@
-
-@import url("https://fonts.googleapis.com/css2?family=Inter:ital%2Copsz%2Cwght@0%2C14..32%2C100..900;1%2C14..32%2C100..900&display=swap");
-
 @import "tailwindcss";
 
 @plugin "@tailwindcss/typography";
@@ -65,7 +62,12 @@
   --gradient-2: oklch(0.727 0.4675 144.688);
   --gradient-3: oklch(0.701 0.3775 339.956);
 
-  /* Fonts */
+  /* Fonts.
+     NOTE: the Google Fonts @import that used to sit at the top of this file is
+     gone. The families the site loads are chosen in the Studio (Theme → Fonts)
+     and requested with a <link> from `src/layouts/Layout.astro`, so a hardcoded
+     @import here would be dead weight (nothing referenced it: every `font-sans`
+     resolved to the stack below) and could load a font nobody selected. */
   --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -89,6 +91,14 @@
   --font-nunito: "Nunito", sans-serif;
   --font-hedvigLettersSerif: "Hedvig Letters Serif", serif;
   --font-antonio: "Antonio", sans-serif;
+
+  /* Typography driven from the CMS (Studio → Theme → Fonts). Both are overridden
+     by the `html:root` block the site injects, which wins on specificity, so a
+     font chosen in the Studio is not repeated here. Defaults: body keeps the
+     sans stack above, heading follows the body font — which is what the template
+     did before fonts were editable, so nothing changes until a font is picked. */
+  --font-body: var(--font-sans);
+  --font-heading: var(--font-body);
   --destructive-foreground: oklch(1.0000 0 0);
   --shadow-color: oklch(0 0 0);
   --shadow-opacity: 0.1;
@@ -784,6 +794,21 @@
   padding-inline: 2rem;
 }
 
+/* The two CMS-driven families as opt-in utilities — `font-heading` for a title
+   that is not an h1–h6, `font-body` to reset inside a heading. Plain CSS in the
+   utilities layer on purpose: an `@theme inline { --font-heading: var(--font-heading) }`
+   alias would emit `--font-heading: var(--font-heading)` into `:root`, and that
+   self-reference would only resolve by luck of declaration order. */
+@layer utilities {
+  .font-heading {
+    font-family: var(--font-heading);
+  }
+
+  .font-body {
+    font-family: var(--font-body);
+  }
+}
+
 @layer components {
   button {
     cursor: pointer;
@@ -798,9 +823,23 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-background text-foreground antialiased;
+    /* Was `font-sans`. Now the CMS-driven body font, which defaults to that same
+       sans stack (`--font-body` above). Tailwind's preflight makes form controls
+       and buttons inherit it, so they follow the CMS choice too. */
+    font-family: var(--font-body);
     scrollbar-gutter: stable;
     letter-spacing: var(--tracking-normal);
+  }
+  /* Titles use the heading font. This is in the base layer, so a `font-*`
+     utility on a heading still wins. */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
   }
 }
 

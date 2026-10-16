@@ -15,6 +15,112 @@
 export declare const internalGroqTypeReferenceTo: unique symbol;
 
 // Source: schema.json
+export type ThemeFonts = {
+  _type: "themeFonts";
+  heading?:
+    | "system"
+    | "Assistant"
+    | "DM Sans"
+    | "Figtree"
+    | "Geist"
+    | "Instrument Sans"
+    | "Inter"
+    | "Karla"
+    | "Lato"
+    | "Manrope"
+    | "Montserrat"
+    | "Nunito"
+    | "Open Sans"
+    | "Outfit"
+    | "Plus Jakarta Sans"
+    | "Poppins"
+    | "Rubik"
+    | "Source Sans 3"
+    | "Space Grotesk"
+    | "Ubuntu"
+    | "Work Sans"
+    | "Cormorant Garamond"
+    | "Crimson Pro"
+    | "DM Serif Display"
+    | "EB Garamond"
+    | "Fraunces"
+    | "Instrument Serif"
+    | "Libre Baskerville"
+    | "Lora"
+    | "Merriweather"
+    | "Newsreader"
+    | "Playfair Display"
+    | "Roboto Slab"
+    | "Source Serif 4"
+    | "Spectral"
+    | "Anton"
+    | "Archivo Black"
+    | "Bebas Neue"
+    | "Bricolage Grotesque"
+    | "Oswald"
+    | "Fira Code"
+    | "IBM Plex Mono"
+    | "JetBrains Mono"
+    | "Roboto Mono"
+    | "Source Code Pro"
+    | "Space Mono"
+    | "Caveat"
+    | "Dancing Script"
+    | "Great Vibes"
+    | "Pacifico";
+  body?:
+    | "system"
+    | "Assistant"
+    | "DM Sans"
+    | "Figtree"
+    | "Geist"
+    | "Instrument Sans"
+    | "Inter"
+    | "Karla"
+    | "Lato"
+    | "Manrope"
+    | "Montserrat"
+    | "Nunito"
+    | "Open Sans"
+    | "Outfit"
+    | "Plus Jakarta Sans"
+    | "Poppins"
+    | "Rubik"
+    | "Source Sans 3"
+    | "Space Grotesk"
+    | "Ubuntu"
+    | "Work Sans"
+    | "Cormorant Garamond"
+    | "Crimson Pro"
+    | "DM Serif Display"
+    | "EB Garamond"
+    | "Fraunces"
+    | "Instrument Serif"
+    | "Libre Baskerville"
+    | "Lora"
+    | "Merriweather"
+    | "Newsreader"
+    | "Playfair Display"
+    | "Roboto Slab"
+    | "Source Serif 4"
+    | "Spectral"
+    | "Anton"
+    | "Archivo Black"
+    | "Bebas Neue"
+    | "Bricolage Grotesque"
+    | "Oswald"
+    | "Fira Code"
+    | "IBM Plex Mono"
+    | "JetBrains Mono"
+    | "Roboto Mono"
+    | "Source Code Pro"
+    | "Space Mono"
+    | "Caveat"
+    | "Dancing Script"
+    | "Great Vibes"
+    | "Pacifico";
+};
+
 export type ThemePalette = {
   _type: "themePalette";
   background?: string;
@@ -65,6 +171,7 @@ export type Theme = {
   title?: string;
   light?: ThemePalette;
   dark?: ThemePalette;
+  fonts?: ThemeFonts;
   radius?: "0" | "0.25rem" | "0.5rem" | "0.75rem" | "1rem";
 };
 
@@ -448,6 +555,7 @@ export type Geopoint = {
 };
 
 export type AllSanitySchemaTypes =
+  | ThemeFonts
   | ThemePalette
   | Theme
   | SanityImageAssetReference
@@ -682,11 +790,12 @@ export type LANDING_QUERY_RESULT = {
 
 // Source: src/sanity/lib/queries.ts
 // Variable: THEME_QUERY
-// Query: *[_type == "theme"][0]{    radius,    light,    dark  }
+// Query: *[_type == "theme"][0]{    radius,    light,    dark,    fonts  }
 export type THEME_QUERY_RESULT = {
   radius: "0.25rem" | "0.5rem" | "0.75rem" | "0" | "1rem" | null;
   light: ThemePalette | null;
   dark: ThemePalette | null;
+  fonts: ThemeFonts | null;
 } | null;
 
 // Query TypeMap
@@ -704,7 +813,7 @@ declare global {
     '\n  *[_type == "siteSettings"][0]{\n    "title":       coalesce(title[language == $locale][0].value, title[0].value),\n    "description": coalesce(description[language == $locale][0].value, description[0].value),\n    siteUrl,\n    ogImage,\n    "primaryNav": primaryNav->{\n      items[]{\n        "label": coalesce(label[language == $locale][0].value, label[0].value),\n        href,\n        "internalRef": internalRef->{ _type, "slug": slug.current }\n      }\n    }\n  }\n': SITE_SETTINGS_QUERY_RESULT;
     '\n  *[_type == "footer"][0]{\n    instagramURL,\n    cellNumber,\n    email,\n    "address":   coalesce(address[language == $locale][0].value, address[0].value),\n    "copyright": coalesce(copyright[language == $locale][0].value, copyright[0].value)\n  }\n': FOOTER_QUERY_RESULT;
     '\n  *[_type == "landing"][0]{\n    "title":       coalesce(title[language == $locale][0].value, title[0].value),\n    landingImage{ asset, alt },\n    image{ asset, alt },\n    "ctaText":    coalesce(ctaText[language == $locale][0].value, ctaText[0].value),\n    "ctaBtnText": coalesce(ctaBtnText[language == $locale][0].value, ctaBtnText[0].value)\n  }\n': LANDING_QUERY_RESULT;
-    '\n  *[_type == "theme"][0]{\n    radius,\n    light,\n    dark\n  }\n': THEME_QUERY_RESULT;
+    '\n  *[_type == "theme"][0]{\n    radius,\n    light,\n    dark,\n    fonts\n  }\n': THEME_QUERY_RESULT;
   }
 }
 // Lets @sanity/client releases that predate the global registry read it too

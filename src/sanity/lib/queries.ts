@@ -143,15 +143,18 @@ export const LANDING_QUERY = defineQuery(`
 `);
 
 // ───── Theme ───────────────────────────────────────────────────────────────
-// Deliberately locale-free: the color palette is language-neutral, so this
-// query takes no `$locale` param and no localized document exists. `light` /
-// `dark` are `themePalette` objects holding one hex string per design token;
-// `src/lib/theme.ts` turns them into CSS variables.
+// Deliberately locale-free: the color palette and the font choices are
+// language-neutral, so this query takes no `$locale` param and no localized
+// document exists. `light` / `dark` are `themePalette` objects holding one hex
+// string per design token; `fonts` holds the two Google Fonts family names.
+// `src/lib/theme.ts` turns both into CSS variables (and, for the fonts, the
+// stylesheet URL rendered by the base layout).
 
 export const THEME_QUERY = defineQuery(`
   *[_type == "theme"][0]{
     radius,
     light,
-    dark
+    dark,
+    fonts
   }
 `);
